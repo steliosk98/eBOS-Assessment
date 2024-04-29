@@ -6,6 +6,7 @@ const csv = require('csv-parser');
 const app = express();
 const PORT = 4000;
 
+// Use JSON parser middleware for parsing JSON data from incoming requests
 app.use(express.json());
 
 // Arrays to store data from CSV files
@@ -31,6 +32,11 @@ function readCSVData(filePath, dataArray, callback) {
 
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
+/**
+ * Writes data to a CSV file.
+ * @param {string} filePath - The path to the CSV file.
+ * @param {Array} data - Array of objects to be written to the CSV file.
+ */
 function writeDataToCSV(filePath, data) {
     const csvWriter = createCsvWriter({
         path: filePath,
@@ -103,7 +109,7 @@ const typeDefs = gql`
   }
 `;
 
-// Define resolvers for GraphQL
+// Define resolvers for GraphQL queries
 const resolvers = {
     Query: {
         users: () => users,
@@ -112,7 +118,7 @@ const resolvers = {
     },
 };
 
-// Initialize Apollo Server
+// Initialize Apollo Server with type definitions and resolvers
 const server = new ApolloServer({ typeDefs, resolvers });
 
 // Read data from CSV files and start the server

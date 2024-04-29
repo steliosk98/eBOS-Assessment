@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
+/**
+ * Component to render pagination controls.
+ * @param {object} props - Component props.
+ * @param {number} props.itemsPerPage - Number of items per page.
+ * @param {number} props.totalItems - Total number of items.
+ * @param {function} props.paginate - Function to set the current page.
+ */
 function Pagination({ itemsPerPage, totalItems, paginate }) {
     const pageNumbers = [];
 
+    // Calculate the total number of pages
     for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
         pageNumbers.push(i);
     }
 
+    // Handle click event on pagination links
     const handleClick = (e, number) => {
-        e.preventDefault();
+        e.preventDefault();  // Prevent the default anchor link behavior
         paginate(number);
     };
 
@@ -29,17 +38,20 @@ function Pagination({ itemsPerPage, totalItems, paginate }) {
     );
 }
 
+/**
+ * Component to manage and display albums.
+ */
 function Albums() {
-    const { userId } = useParams();
-    const [albums, setAlbums] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [albumsPerPage] = useState(10);
-    const [newAlbumTitle, setNewAlbumTitle] = useState('');
-    const [editing, setEditing] = useState(false);
-    const [currentAlbum, setCurrentAlbum] = useState(null);
-    const navigate = useNavigate();
+    const { userId } = useParams(); // Retrieve userId from URL parameters
+    const [albums, setAlbums] = useState([]); // State to store album data
+    const [currentPage, setCurrentPage] = useState(1); // State to track the current page
+    const [albumsPerPage] = useState(10); // State to set number of albums per page
+    const [newAlbumTitle, setNewAlbumTitle] = useState(''); // State for storing new album title input
+    const [editing, setEditing] = useState(false); // State to toggle edit mode
+    const [currentAlbum, setCurrentAlbum] = useState(null); // State to hold the album currently being edited
+    const navigate = useNavigate(); // Hook to navigate between routes
 
-
+    // Fetch albums from the server when the component mounts or userId changes
     useEffect(() => {
         fetch(`http://localhost:4000/albums?userId=${userId}`)
             .then(response => response.json())
@@ -47,6 +59,7 @@ function Albums() {
             .catch(error => console.error('Error fetching albums:', error));
     }, [userId]);
 
+    // Function to fetch albums from the server
     const fetchAlbums = () => {
         fetch(`http://localhost:4000/albums?userId=${userId}`)
             .then(response => response.json())
@@ -54,6 +67,7 @@ function Albums() {
             .catch(error => console.error('Error fetching albums:', error));
     };
 
+    // Function to handle adding a new album
     const handleAddAlbum = () => {
         const albumId = Math.max(...albums.map(a => a.id)) + 1; // Simple ID generation
         const album = { userId: parseInt(userId), id: albumId, title: newAlbumTitle };
@@ -67,6 +81,7 @@ function Albums() {
         });
     };
 
+    // Function to handle editing an existing album
     const handleEditAlbum = () => {
         fetch(`http://localhost:4000/albums/${currentAlbum.id}`, {
             method: 'PUT',
@@ -80,6 +95,7 @@ function Albums() {
         });
     };
 
+    // Function to handle deleting an album
     const handleDeleteAlbum = (albumId) => {
         fetch(`http://localhost:4000/albums/${albumId}`, {
             method: 'DELETE'
@@ -88,14 +104,17 @@ function Albums() {
         });
     };
 
+    // Function to navigate to the photos of an album
     const handleAlbumClick = (albumId) => {
         navigate(`/photos/${userId}/${albumId}`);
     };
 
+    // Calculate indices for slicing the album array to implement pagination
     const indexOfLastAlbum = currentPage * albumsPerPage;
     const indexOfFirstAlbum = indexOfLastAlbum - albumsPerPage;
     const currentAlbums = albums.slice(indexOfFirstAlbum, indexOfLastAlbum);
 
+    // Function to change the current page
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
     // Custom button styles

@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
-
+/**
+ * Component to render pagination controls.
+ * @param {object} props - Component props.
+ * @param {number} props.itemsPerPage - Number of items per page.
+ * @param {number} props.totalItems - Total number of items.
+ * @param {function} props.paginate - Function to set the current page.
+ */
 function Pagination({ itemsPerPage, totalItems, paginate }) {
     const pageNumbers = [];
 
+    // Calculate the total number of pages
     for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
         pageNumbers.push(i);
     }
@@ -25,12 +32,15 @@ function Pagination({ itemsPerPage, totalItems, paginate }) {
     );
 }
 
+/**
+ * Component to manage and display photos within an album.
+ */
 function Photos() {
-    const { userId, albumId } = useParams();
-    const [photos, setPhotos] = useState([]);
-    const [albumTitle, setAlbumTitle] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [photosPerPage] = useState(10);
+    const { userId, albumId } = useParams(); // Retrieve userId and albumId from URL parameters
+    const [photos, setPhotos] = useState([]); // State to store photo data
+    const [albumTitle, setAlbumTitle] = useState(''); // State to store the album title
+    const [currentPage, setCurrentPage] = useState(1); // State to track the current page
+    const [photosPerPage] = useState(10); // State to set number of photos per page
 
     useEffect(() => {
         // Fetch album title
@@ -51,6 +61,10 @@ function Photos() {
             .catch(error => console.error('Error fetching photos:', error));
     }, [userId, albumId]);
 
+    /**
+     * Function to handle deleting a photo.
+     * @param {number} photoId - The ID of the photo to delete.
+     */
     const handleDeletePhoto = (photoId) => {
         fetch(`http://localhost:4000/photos/${photoId}`, {
             method: 'DELETE'
@@ -70,12 +84,12 @@ function Photos() {
             });
     };
 
-    // Get current photos
+    // Calculate indices for slicing the photo array to implement pagination
     const indexOfLastPhoto = currentPage * photosPerPage;
     const indexOfFirstPhoto = indexOfLastPhoto - photosPerPage;
     const currentPhotos = photos.slice(indexOfFirstPhoto, indexOfLastPhoto);
 
-    // Change page
+    // Function to change the current page
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
     return (
