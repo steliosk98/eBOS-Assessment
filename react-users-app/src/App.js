@@ -5,6 +5,7 @@ import { messages } from './messages';
 import LanguageSwitcher from './LanguageSwitcher';
 import Users from './Users';
 import Albums from './Albums';
+import Photos from './Photos';
 import BackLink from "./BackLink";
 import './App.css';
 
@@ -33,6 +34,7 @@ function App() {
               <Route path="/" element={<Navigate replace to="/users" />} />
               <Route path="/users" element={<Users />} />
               <Route path="/albums/:userId" element={<Albums />} />
+              <Route path="/photos/:albumId" element={<Photos />} />
             </Routes>
           </div>
         </div>

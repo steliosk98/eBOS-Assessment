@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
 function Pagination({ itemsPerPage, totalItems, paginate }) {
@@ -37,6 +37,8 @@ function Albums() {
     const [newAlbumTitle, setNewAlbumTitle] = useState('');
     const [editing, setEditing] = useState(false);
     const [currentAlbum, setCurrentAlbum] = useState(null);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         fetchAlbums();
@@ -83,6 +85,10 @@ function Albums() {
         });
     };
 
+    const handleAlbumClick = (albumId) => {
+        navigate(`/photos/${albumId}`);
+    };
+
     const indexOfLastAlbum = currentPage * albumsPerPage;
     const indexOfFirstAlbum = indexOfLastAlbum - albumsPerPage;
     const currentAlbums = albums.slice(indexOfFirstAlbum, indexOfLastAlbum);
@@ -116,7 +122,7 @@ function Albums() {
             <br></br>
             <div className="row">
                 {currentAlbums.map(album => (
-                    <div className="col-md-4 mb-3" key={album.id}>
+                    <div className="col-md-4 mb-3" key={album.id} onClick={() => handleAlbumClick(album.id)}>
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title">{album.title}</h5>
