@@ -1,19 +1,28 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min';
+import '../node_modules/flag-icon-css/css/flag-icons.min.css';
+import App, { LocaleProvider } from './App';
+import { IntlProvider } from 'react-intl';
+import { messages } from './messages';
 
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// Default to English if the browser language is not Greek
+const language = navigator.language.startsWith('el') ? 'el' : 'en';
+
+// Use createRoot to manage the root
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement); // Create a root.
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <React.StrictMode>
+        <IntlProvider locale={language} messages={messages[language]}>
+            <LocaleProvider>
+                <App />
+            </LocaleProvider>
+        </IntlProvider>
+    </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
