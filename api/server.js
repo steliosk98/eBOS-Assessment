@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { ApolloServer, gql } = require('apollo-server-express');
 const fs = require('fs');
 const csv = require('csv-parser');
@@ -107,6 +108,9 @@ readCSVData('./mock_data/users.csv', users, () => {
         });
     });
 });
+
+// Enable CORS for all routes
+app.use(cors());
 
 // REST Endpoint to get all users
 app.get('/users', (req, res) => {
