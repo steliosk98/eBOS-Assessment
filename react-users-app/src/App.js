@@ -34,7 +34,7 @@ function App() {
               <Route path="/" element={<Navigate replace to="/users" />} />
               <Route path="/users" element={<Users />} />
               <Route path="/albums/:userId" element={<Albums />} />
-              <Route path="/photos/:albumId" element={<Photos />} />
+              <Route path="/photos/:userId/:albumId" element={<Photos />} />
             </Routes>
           </div>
         </div>

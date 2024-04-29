@@ -41,7 +41,10 @@ function Albums() {
 
 
     useEffect(() => {
-        fetchAlbums();
+        fetch(`http://localhost:4000/albums?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => setAlbums(data))
+            .catch(error => console.error('Error fetching albums:', error));
     }, [userId]);
 
     const fetchAlbums = () => {
@@ -86,7 +89,7 @@ function Albums() {
     };
 
     const handleAlbumClick = (albumId) => {
-        navigate(`/photos/${albumId}`);
+        navigate(`/photos/${userId}/${albumId}`);
     };
 
     const indexOfLastAlbum = currentPage * albumsPerPage;

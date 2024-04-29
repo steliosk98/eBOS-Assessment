@@ -140,7 +140,7 @@ app.get('/users', (req, res) => {
     res.json(users);
 });
 
-// REST Endpoint to get all albums or albums by a specific user
+// REST Endpoint to get all albums or albums by a specific user with photo counts
 app.get('/albums', (req, res) => {
     const { userId } = req.query;
     let filteredAlbums = albums;
@@ -151,16 +151,33 @@ app.get('/albums', (req, res) => {
 
     // Map through each album and add a photo count
     const albumsWithPhotoCount = filteredAlbums.map(album => {
-        const photoCount = photos.filter(photo => photo.albumId === album.id).length;
+        const photoCount = photos.filter(photo => photo.albumId === album.id && photo.userId === album.userId).length;
         return { ...album, photoCount };
     });
 
     res.json(albumsWithPhotoCount);
 });
 
-// REST Endpoint to get all photos
+// REST Endpoint to get all photos or photos by a specific album
 app.get('/photos', (req, res) => {
-    res.json(photos);
+    const { albumId, userId } = req.query;
+    let filteredPhotos = photos.filter(photo =>
+        photo.albumId.toString() === albumId && photo.userId.toString() === userId);
+
+    res.json(filteredPhotos);
+});
+
+// REST Endpoint to delete a specific photo by ID
+app.delete('/photos/:id', (req, res) => {
+    const { id } = req.params;
+    const initialLength = photos.length;
+    photos = photos.filter(photo => photo.id.toString() !== id);
+
+    if (photos.length < initialLength) {
+        res.status(200).send({ message: 'Photo deleted successfully' });
+    } else {
+        res.status(404).send({ error: 'Photo not found' });
+    }
 });
 
 // Add an album
@@ -195,6 +212,24 @@ app.delete('/albums/:id', (req, res) => {
     if (albums.length < initialLength) {
         writeDataToCSV('./mock_data/albums.csv', albums);
         res.send('Album deleted');
+    } else {
+        res.status(404).send('Album not found');
+    }
+});
+
+// REST Endpoint to get a specific album by ID and UserID
+app.get('/albums/:id', (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.query;  // Get userId from query parameters
+
+    if (!userId) {
+        return res.status(400).send('User ID is required');
+    }
+
+    const album = albums.find(album => album.id.toString() === id && album.userId.toString() === userId);
+
+    if (album) {
+        res.json({ title: album.title });  // Send back only the title of the album
     } else {
         res.status(404).send('Album not found');
     }
