@@ -1,5 +1,10 @@
 {
-  "home.title": "Αρχική Σελίδα",
+  "home.title": "Χρήστες",
   "users.title": "Χρήστες",
-  "user.email": "Ηλεκτρονικό ταχυδρομείο: {email}"
+  "user.email": "Ηλεκτρονικό ταχυδρομείο: {email}",
+  "album.title": "Αλμπουμ",
+  "album.totalphotos": "Σύνολο Φωτογραφιών:",
+  "back.link": "Πίσω"
+
+
 }

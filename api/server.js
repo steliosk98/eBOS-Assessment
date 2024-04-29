@@ -117,9 +117,22 @@ app.get('/users', (req, res) => {
     res.json(users);
 });
 
-// REST Endpoint to get all albums
+// REST Endpoint to get all albums or albums by a specific user
 app.get('/albums', (req, res) => {
-    res.json(albums);
+    const { userId } = req.query;
+    let filteredAlbums = albums;
+
+    if (userId) {
+        filteredAlbums = albums.filter(album => album.userId.toString() === userId);
+    }
+
+    // Map through each album and add a photo count
+    const albumsWithPhotoCount = filteredAlbums.map(album => {
+        const photoCount = photos.filter(photo => photo.albumId === album.id).length;
+        return { ...album, photoCount };
+    });
+
+    res.json(albumsWithPhotoCount);
 });
 
 // REST Endpoint to get all photos

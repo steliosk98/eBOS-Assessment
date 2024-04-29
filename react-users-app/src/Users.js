@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
+
 
 function Users() {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(10);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         fetch('http://localhost:4000/users')
@@ -18,6 +22,10 @@ function Users() {
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
     const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
+    const handleUserClick = (userId) => {
+        navigate(`/albums/${userId}`);
+    };
+
     // Change page
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
@@ -26,7 +34,7 @@ function Users() {
             <h2><FormattedMessage id="users.title" /></h2>
             <div className="row">
                 {currentUsers.map(user => (
-                    <div className="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3" key={user.id}>
+                    <div className="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3" key={user.id} onClick={() => handleUserClick(user.id)}>
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title">{user.name}</h5>

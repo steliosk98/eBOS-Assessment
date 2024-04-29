@@ -1,5 +1,8 @@
 {
-  "home.title": "Home Page",
+  "home.title": "Users",
   "users.title": "Users",
-  "user.email": "Email: {email}"
+  "user.email": "Email: {email}",
+  "album.title": "Albums",
+  "album.totalphotos": "Total Photos:",
+  "back.link": "Back"
 }

@@ -1,9 +1,11 @@
 import React, { createContext, useState, useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { FormattedMessage, IntlProvider } from 'react-intl';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
 import { messages } from './messages';
 import LanguageSwitcher from './LanguageSwitcher';
 import Users from './Users';
+import Albums from './Albums';
+import BackLink from "./BackLink";
 import './App.css';
 
 
@@ -16,12 +18,10 @@ function App() {
         <div>
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-              <Link className="navbar-brand" to="/"><FormattedMessage id="home.title" /></Link>
+              <BackLink />
               <div className="collapse navbar-collapse">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/users"><FormattedMessage id="users.title" /></Link>
-                  </li>
+
                 </ul>
               </div>
             </div>
@@ -30,8 +30,9 @@ function App() {
 
           <div className="container mt-4">
             <Routes>
+              <Route path="/" element={<Navigate replace to="/users" />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/" element={<Home />} />
+              <Route path="/albums/:userId" element={<Albums />} />
             </Routes>
           </div>
         </div>
@@ -58,9 +59,5 @@ export const LocaleProvider = ({ children }) => {
   );
 };
 
-
-function Home() {
-  return <h2><FormattedMessage id="home.title" /></h2>;
-}
 
 export default App;
