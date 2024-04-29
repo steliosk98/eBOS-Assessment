@@ -4,6 +4,10 @@
   "user.email": "Ηλεκτρονικό ταχυδρομείο: {email}",
   "album.title": "Αλμπουμ",
   "album.totalphotos": "Σύνολο Φωτογραφιών:",
+  "album.addalbum": "Προσθήκη Αλμπουμ",
+  "album.edit": "Επεξεργασία",
+  "album.delete": "Διαγραφή",
+  "album.savechanges": "Αποθήκευση",
   "back.link": "Πίσω"
 
 

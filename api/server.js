@@ -6,6 +6,8 @@ const csv = require('csv-parser');
 const app = express();
 const PORT = 4000;
 
+app.use(express.json());
+
 // Arrays to store data from CSV files
 let users = [];
 let albums = [];
@@ -24,6 +26,27 @@ function readCSVData(filePath, dataArray, callback) {
         .on('end', () => {
             console.log(`CSV file ${filePath} successfully processed`);
             callback();
+        });
+}
+
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+
+function writeDataToCSV(filePath, data) {
+    const csvWriter = createCsvWriter({
+        path: filePath,
+        header: [
+            {id: 'userId', title: 'userId'},
+            {id: 'id', title: 'id'},
+            {id: 'title', title: 'title'}
+        ]
+    });
+
+    csvWriter.writeRecords(data)
+        .then(() => {
+            console.log('Data written successfully to CSV');
+        })
+        .catch(err => {
+            console.error('Error writing to CSV:', err);
         });
 }
 
@@ -138,4 +161,41 @@ app.get('/albums', (req, res) => {
 // REST Endpoint to get all photos
 app.get('/photos', (req, res) => {
     res.json(photos);
+});
+
+// Add an album
+app.post('/albums', (req, res) => {
+    const { userId, id, title } = req.body;
+    albums.push({ userId: parseInt(userId), id: parseInt(id), title });
+    writeDataToCSV('./mock_data/albums.csv', albums);
+    res.status(201).send('Album added');
+});
+
+// Edit an album
+app.put('/albums/:id', (req, res) => {
+    const { title } = req.body;
+    const { id } = req.params;
+    const albumIndex = albums.findIndex(album => album.id.toString() === id);
+
+    if (albumIndex !== -1) {
+        albums[albumIndex].title = title;
+        writeDataToCSV('./mock_data/albums.csv', albums);
+        res.send('Album updated');
+    } else {
+        res.status(404).send('Album not found');
+    }
+});
+
+// Delete an album
+app.delete('/albums/:id', (req, res) => {
+    const { id } = req.params;
+    const initialLength = albums.length;
+    albums = albums.filter(album => album.id.toString() !== id);
+
+    if (albums.length < initialLength) {
+        writeDataToCSV('./mock_data/albums.csv', albums);
+        res.send('Album deleted');
+    } else {
+        res.status(404).send('Album not found');
+    }
 });

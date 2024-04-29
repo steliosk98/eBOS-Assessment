@@ -4,5 +4,9 @@
   "user.email": "Email: {email}",
   "album.title": "Albums",
   "album.totalphotos": "Total Photos:",
+  "album.addalbum": "Add Album",
+  "album.edit": "Edit",
+  "album.delete": "Delete",
+  "album.savechanges": "Save Changes",
   "back.link": "Back"
 }
