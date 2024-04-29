@@ -82,7 +82,8 @@ function Albums() {
     };
 
     // Function to handle editing an existing album
-    const handleEditAlbum = () => {
+    const handleEditAlbum = (e) => {
+        e.stopPropagation();
         fetch(`http://localhost:4000/albums/${currentAlbum.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -96,7 +97,8 @@ function Albums() {
     };
 
     // Function to handle deleting an album
-    const handleDeleteAlbum = (albumId) => {
+    const handleDeleteAlbum = (e, albumId) => {
+        e.stopPropagation();
         fetch(`http://localhost:4000/albums/${albumId}`, {
             method: 'DELETE'
         }).then(() => {
@@ -149,8 +151,8 @@ function Albums() {
                             <div className="card-body">
                                 <h5 className="card-title">{album.title}</h5>
                                 <p className="card-text"><FormattedMessage id="album.totalphotos" defaultMessage="Total Photos:" /> {album.photoCount}</p>
-                                <button onClick={() => { setEditing(true); setCurrentAlbum(album); setNewAlbumTitle(album.title); }} style={buttonStyle}><FormattedMessage id="album.edit" defaultMessage="Edit" /></button>
-                                <button onClick={() => handleDeleteAlbum(album.id)} style={{ ...buttonStyle, backgroundColor: '#f8d7da', color: '#721c24' }}><FormattedMessage id="album.delete" defaultMessage="Delete" /></button>
+                                <button onClick={(e) => { e.stopPropagation(); setEditing(true); setCurrentAlbum(album); setNewAlbumTitle(album.title); }} style={buttonStyle}><FormattedMessage id="album.edit" defaultMessage="Edit" /></button>
+                                <button onClick={(e) => handleDeleteAlbum(e, album.id)} style={{ ...buttonStyle, backgroundColor: '#f8d7da', color: '#721c24' }}><FormattedMessage id="album.delete" defaultMessage="Delete" /></button>
                             </div>
                         </div>
                     </div>
